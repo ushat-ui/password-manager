@@ -287,3 +287,20 @@ input:focus, textarea:focus { outline: none; border-color: #667eea; }
     background: white;
     color: #333;
 }
+/* Анимация для логотипа */
+.animated-logo {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.animated-logo:hover {
+    transform: scale(1.05);
+}
+
+.animated-logo:hover svg rect:first-of-type {
+    fill: #10b981;  /* центральная часть замка становится зелёной */
+}
+
+.animated-logo:hover svg path:last-of-type {
+    stroke: #10b981;  /* дужка замка тоже зелёная */
+}
