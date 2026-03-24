@@ -322,3 +322,19 @@ input:focus, textarea:focus { outline: none; border-color: #667eea; }
 .auth-logo.animated-logo-auth:hover {
     transform: scale(1.05);
 }
+/* Анимация для логотипов */
+.animated-logo, .auth-logo.animated-logo-auth {
+    transition: transform 0.2s ease;
+}
+
+.animated-logo:hover, .auth-logo.animated-logo-auth:hover {
+    transform: scale(1.05);
+}
+
+/* При наведении замок становится зелёным */
+.animated-logo:hover svg rect,
+.animated-logo:hover svg path:last-of-type,
+.auth-logo.animated-logo-auth:hover svg rect,
+.auth-logo.animated-logo-auth:hover svg path:last-of-type {
+    fill: #10b981;
+}
