@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Облачный менеджер паролей</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Локальные стили и скрипты -->
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h2>Облачный менеджер паролей</h2>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')"><i class="fas fa-sign-in-alt"></i> Вход</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')"><i class="fas fa-user-plus"></i> Регистрация</button>
+                <button class="auth-tab" onclick="switchAuthTab('recover')"><i class="fas fa-key"></i> Восстановление</button>
+            </div>
+
+            <div class="auth-form active" id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Пароль">
+                <button class="btn btn-primary" onclick="login()"><i class="fas fa-arrow-right-to-bracket"></i> Войти</button>
+                <button class="btn btn-outline" onclick="loginWithGoogle()" style="background: #fff; color: #2a5298; margin-top: 4px;">
+                    <i class="fab fa-google"></i> Войти через Google
+                </button>
+                <button class="btn btn-outline" onclick="showPhoneLogin()" style="background: #fff; color: #2a5298; margin-top: 4px;">
+                    <i class="fas fa-phone-alt"></i> Войти по телефону
+                </button>
+                <div class="support-link">
+                    <i class="fas fa-envelope"></i> Техподдержка: 
+                    <a href="mailto:halteh@mail.ru">halteh@mail.ru</a>
+                </div>
+            </div>
+
+            <div class="auth-form" id="registerForm">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)">
+                <input type="password" id="regConfirm" placeholder="Подтвердите пароль">
+                <input type="text" id="regMasterHint" placeholder="Подсказка для мастер-пароля (необязательно)">
+                <button class="btn btn-primary" onclick="register()"><i class="fas fa-user-check"></i> Зарегистрироваться</button>
+                <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                    <i class="fas fa-info-circle"></i> Мастер-пароль — это пароль для шифрования ваших данных. Запомните его! Без него доступ к паролям будет невозможен.
+                </p>
+                <div class="support-link">
+                    <i class="fas fa-envelope"></i> Техподдержка: 
+                    <a href="mailto:halteh@mail.ru">halteh@mail.ru</a>
+                </div>
+            </div>
+
+            <div class="auth-form" id="recoverForm">
+                <div id="recoverStep1">
+                    <p style="margin-bottom: 15px; text-align: left;">
+                        <i class="fas fa-info-circle"></i> Выберите способ восстановления:
+                    </p>
+                    <button class="btn btn-outline" onclick="showRecoverByEmail()" style="margin-bottom: 10px;">
+                        <i class="fas fa-envelope"></i> Восстановить пароль Firebase
+                    </button>
+                    <button class="btn btn-outline" onclick="showMasterHint()" style="margin-bottom: 10px;">
+                        <i class="fas fa-question-circle"></i> Напомнить мастер-пароль
+                    </button>
+                    <button class="btn btn-outline" onclick="showSupportContact()">
+                        <i class="fas fa-headset"></i> Связаться с поддержкой
+                    </button>
+                </div>
+
+                <div id="recoverByEmail" style="display: none;">
+                    <h4 style="margin: 10px 0;"><i class="fas fa-envelope"></i> Восстановление пароля</h4>
+                    <input type="email" id="recoverEmail" placeholder="Email">
+                    <button class="btn btn-primary" onclick="sendPasswordReset()">
+                        <i class="fas fa-paper-plane"></i> Отправить ссылку для сброса
+                    </button>
+                    <button class="btn btn-outline" onclick="backToRecoverMenu()">
+                        <i class="fas fa-arrow-left"></i> Назад
+                    </button>
+                </div>
+
+                <div id="masterHintPanel" style="display: none;">
+                    <h4 style="margin: 10px 0;"><i class="fas fa-question-circle"></i> Подсказка мастер-пароля</h4>
+                    <input type="email" id="hintEmail" placeholder="Email">
+                    <button class="btn btn-primary" onclick="sendMasterHint()">
+                        <i class="fas fa-paper-plane"></i> Отправить подсказку
+                    </button>
+                    <button class="btn btn-outline" onclick="backToRecoverMenu()">
+                        <i class="fas fa-arrow-left"></i> Назад
+                    </button>
+                    <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                        <i class="fas fa-lock"></i> Подсказка была создана при регистрации.
+                    </p>
+                </div>
+
+                <div id="supportContact" style="display: none;">
+                    <h4 style="margin: 10px 0;"><i class="fas fa-headset"></i> Связаться с поддержкой</h4>
+                    <p style="text-align: left; margin: 10px 0;">
+                        <i class="fas fa-envelope"></i> Email: 
+                        <a href="mailto:halteh@mail.ru">halteh@mail.ru</a>
+                    </p>
+                    <p style="text-align: left; margin: 10px 0;">
+                        <i class="fas fa-clock"></i> Время ответа: обычно в течение 24 часов
+                    </p>
+                    <p style="text-align: left; margin: 10px 0;">
+                        <i class="fas fa-info-circle"></i> При обращении укажите ваш email и опишите проблему.
+                    </p>
+                    <button class="btn btn-outline" onclick="backToRecoverMenu()">
+                        <i class="fas fa-arrow-left"></i> Назад
+                    </button>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 12px; color: #666;">
+                <i class="fas fa-lock"></i> Все данные шифруются. Сервер не знает ваши пароли.
+            </p>
+        </div>
+    </div>
+
+    <div class="container" id="mainApp" style="display: none;">
+        <div class="header">
+            <h1>
+                <span class="logo-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+                Облачный менеджер паролей
+            </h1>
+            <p><i class="fas fa-shield-alt"></i> Ваши пароли в безопасности в облаке</p>
+        </div>
+        <div class="card">
+            <div class="stats">
+                <span><i class="fas fa-user-circle"></i> <span id="userEmail">user@example.com</span></span>
+                <span class="sync-status"><i class="fas fa-check-circle"></i> <span id="syncStatus">Синхронизировано</span></span>
+                <div style="display: flex; gap: 8px;">
+                    <button class="small-btn btn-outline" onclick="showMasterHintDialog()" style="width: auto; margin: 0;" title="Добавить/изменить подсказку">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <button class="small-btn btn-outline" onclick="logout()" style="width: auto; margin: 0;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Поиск по сервису или логину..." onkeyup="filterPasswords()">
+            </div>
+            <button class="btn btn-success" onclick="showAddModal()"><i class="fas fa-plus-circle"></i> Добавить пароль</button>
+            <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Экспорт в CSV</button>
+            <div class="import-btn-wrapper">
+                <button class="btn btn-outline" onclick="toggleImportMenu()" style="width: 100%;"><i class="fas fa-upload"></i> Импорт паролей <i class="fas fa-chevron-down"></i></button>
+                <div id="importMenu" class="import-menu">
+                    <button class="small-btn btn-outline" onclick="importFromSource('excel')"><i class="fas fa-file-excel"></i> Excel / CSV файл</button>
+                    <button class="small-btn btn-outline" onclick="importFromSource('google')"><i class="fab fa-chrome"></i> Google Chrome (CSV)</button>
+                    <button class="small-btn btn-outline" onclick="importFromSource('yandex')"><i class="fab fa-yandex"></i> Яндекс.Пароли (CSV)</button>
+                    <button class="small-btn btn-outline" onclick="importFromSource('icloud')"><i class="fab fa-apple"></i> iCloud / iPhone (CSV)</button>
+                    <button class="small-btn btn-outline" onclick="importFromSource('text')"><i class="fas fa-file-alt"></i> Текстовый файл</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom: 16px;"><i class="fas fa-key"></i> Мои пароли</h3>
+            <div id="passwordsList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-plus-circle"></i> Добавить пароль</h3>
+            <input type="text" id="addService" placeholder="Сервис *">
+            <input type="text" id="addUsername" placeholder="Логин">
+            <input type="password" id="addPassword" placeholder="Пароль *">
+            <textarea id="addNotes" rows="3" placeholder="Заметки"></textarea>
+            <button class="btn btn-success" onclick="addPassword()"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" onclick="closeModal('addModal')"><i class="fas fa-times"></i> Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-edit"></i> Редактировать</h3>
+            <input type="text" id="editService" placeholder="Сервис *">
+            <input type="text" id="editUsername" placeholder="Логин">
+            <input type="password" id="editPassword" placeholder="Пароль *">
+            <textarea id="editNotes" rows="3" placeholder="Заметки"></textarea>
+            <input type="hidden" id="editId">
+            <button class="btn btn-success" onclick="updatePassword()"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="btn btn-outline" onclick="closeModal('editModal')"><i class="fas fa-times"></i> Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal" id="checkModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-search"></i> Проверка входа</h3>
+            <div id="checkServiceName" style="background: #f0f0f0; padding: 8px; border-radius: 8px; margin: 10px 0;"></div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="checkUrl" placeholder="Ссылка на сайт (https://...)" style="flex: 1;">
+                <button class="small-btn btn-outline" onclick="saveCurrentUrl()" style="width: auto; padding: 12px;" title="Сохранить URL для сайта"><i class="fas fa-save"></i></button>
+            </div>
+            <div style="display: flex; gap: 8px; margin: 8px 0;">
+                <input type="text" id="checkLogin" placeholder="Логин" style="flex: 1;">
+                <input type="password" id="checkPassword" placeholder="Пароль" style="flex: 1;">
+            </div>
+            <div style="display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;">
+                <button class="small-btn btn-outline" onclick="copyLoginOnly()" style="flex: 1;">
+                    <i class="fas fa-user"></i> Копировать логин
+                </button>
+                <button class="small-btn btn-outline" onclick="copyPasswordOnly()" style="flex: 1;">
+                    <i class="fas fa-key"></i> Копировать пароль
+                </button>
+                <button class="small-btn btn-copy-all" onclick="copyLoginAndPassword()" style="flex: 1;">
+                    <i class="fas fa-copy"></i> Копировать всё
+                </button>
+            </div>
+            <div style="display: flex; gap: 10px; margin: 10px 0;">
+                <button class="small-btn btn-primary" onclick="testLogin()" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Проверить</button>
+                <button class="small-btn btn-outline" onclick="markAsFailed()" style="flex: 1;"><i class="fas fa-exclamation-triangle"></i> Не работает</button>
+            </div>
+            <div id="checkResult" style="font-size: 14px; padding: 10px; border-radius: 8px; display: none;"></div>
+            <button class="btn btn-outline" onclick="closeModal('checkModal')"><i class="fas fa-times"></i> Закрыть</button>
+        </div>
+    </div>
+
+    <div class="modal" id="phoneModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-phone-alt"></i> Вход по телефону</h3>
+            <div id="phoneStep1">
+                <input type="tel" id="phoneNumber" placeholder="+7 999 123-45-67">
+                <button class="btn btn-primary" onclick="sendPhoneCode()"><i class="fas fa-paper-plane"></i> Отправить код</button>
+            </div>
+            <div id="phoneStep2" style="display: none;">
+                <input type="text" id="phoneCode" placeholder="Код из SMS">
+                <button class="btn btn-success" onclick="verifyPhoneCode()"><i class="fas fa-check"></i> Подтвердить</button>
+            </div>
+            <button class="btn btn-outline" onclick="closeModal('phoneModal')"><i class="fas fa-times"></i> Отмена</button>
+            <div id="phoneResult" style="margin-top: 12px; font-size: 14px;"></div>
+        </div>
+    </div>
+    <div id="recaptcha-container"></div>
+</body>
+</html>
