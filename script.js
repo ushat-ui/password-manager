@@ -274,7 +274,7 @@ function renderPasswords() {
         <div class="password-item">
             <div class="password-info">
                 <div class="password-service">
-                    <i class="fas fa-globe"></i> ${escapeHtml(p.service)}
+                    <img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(p.service)}&sz=16" width="16" height="16" style="vertical-align: middle; margin-right: 6px;" alt=""> ${escapeHtml(p.service)}
                     ${p.needsCheck ? '<span class="check-badge"><i class="fas fa-exclamation-triangle"></i> не работает</span>' : ''}
                 </div>
                 <div class="password-username"><i class="fas fa-user"></i> ${escapeHtml(p.username || 'без логина')}</div>
