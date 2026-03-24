@@ -304,3 +304,21 @@ input:focus, textarea:focus { outline: none; border-color: #667eea; }
 .animated-logo:hover svg path:last-of-type {
     stroke: #10b981;  /* дужка замка тоже зелёная */
 }
+/* Анимация для основного логотипа */
+.animated-logo {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.animated-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Анимация для логотипа на экране авторизации */
+.auth-logo.animated-logo-auth {
+    transition: transform 0.2s ease;
+}
+
+.auth-logo.animated-logo-auth:hover {
+    transform: scale(1.05);
+}

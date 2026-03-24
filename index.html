@@ -21,9 +21,19 @@
 <body>
     <div class="auth-screen" id="authScreen">
         <div class="auth-card">
-            <div class="auth-logo">
-                <i class="fas fa-cloud-upload-alt"></i>
-            </div>
+            <div class="auth-logo animated-logo-auth">
+    <svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="gradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#5f7cf0"/>
+                <stop offset="100%" stop-color="#7a4bd9"/>
+            </linearGradient>
+        </defs>
+        <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#gradAuth)"/>
+        <path fill="#ffffff" d="M160 300 C120 300, 100 270, 120 240 C130 210, 160 200, 190 210 C210 170, 270 170, 290 210 C320 200, 360 220, 360 260 C390 260, 400 300, 360 320 L160 320 C140 320, 120 310, 160 300 Z"/>
+        <path fill="#6b5fd6" d="M256 210 L210 255 C205 260, 210 270, 220 270 L240 270 L240 320 C240 330, 272 330, 272 320 L272 270 L292 270 C302 270, 307 260, 302 255 Z"/>
+    </svg>
+</div>
             <h2>Облачный менеджер паролей</h2>
             <div class="auth-tabs">
                 <button class="auth-tab active" onclick="switchAuthTab('login')"><i class="fas fa-sign-in-alt"></i> Вход</button>
@@ -131,19 +141,16 @@
         <div class="header">
             <h1>
     <span class="logo-icon animated-logo">
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#667eea"/>
-                    <stop offset="100%" stop-color="#764ba2"/>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#5f7cf0"/>
+                    <stop offset="100%" stop-color="#7a4bd9"/>
                 </linearGradient>
             </defs>
-            <!-- Щит -->
-            <path d="M50 10 L85 25 L85 55 C85 75 70 90 50 95 C30 90 15 75 15 55 L15 25 L50 10Z" fill="url(#shieldGrad)" stroke="white" stroke-width="2"/>
-            <!-- Замок -->
-            <rect x="35" y="50" width="30" height="28" rx="5" fill="white"/>
-            <rect x="45" y="55" width="10" height="15" fill="#667eea"/>
-            <path d="M45 50 L45 42 Q50 38 55 42 L55 50" fill="white" stroke="#667eea" stroke-width="2"/>
+            <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#grad)"/>
+            <path fill="#ffffff" d="M160 300 C120 300, 100 270, 120 240 C130 210, 160 200, 190 210 C210 170, 270 170, 290 210 C320 200, 360 220, 360 260 C390 260, 400 300, 360 320 L160 320 C140 320, 120 310, 160 300 Z"/>
+            <path fill="#6b5fd6" d="M256 210 L210 255 C205 260, 210 270, 220 270 L240 270 L240 320 C240 330, 272 330, 272 320 L272 270 L292 270 C302 270, 307 260, 302 255 Z"/>
         </svg>
     </span>
     Облачный менеджер паролей
