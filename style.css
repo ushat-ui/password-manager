@@ -33,6 +33,23 @@ body {
     justify-content: center;
     font-size: 28px;
     backdrop-filter: blur(10px);
+/* Анимация для логотипа */
+.animated-logo {
+    transition: transform 0.2s ease;
+    display: inline-flex;
+}
+
+.animated-logo:hover {
+    transform: scale(1.05);
+}
+
+.animated-logo:hover svg rect:first-of-type {
+    fill: #10b981; /* замок становится зелёным */
+}
+
+.animated-logo:hover svg path:last-of-type {
+    stroke: #10b981; /* скоба замка тоже зелёная */
+}
 }
 .header p { color: rgba(255,255,255,0.9); }
 .btn {
