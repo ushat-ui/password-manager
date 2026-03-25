@@ -1,4 +1,329 @@
-// ============= FIREBASE =============
+// ===================== МУЛЬТИЯЗЫЧНОСТЬ =====================
+const languages = {
+    ru: { flag: '🇷🇺', name: 'Русский' },
+    en: { flag: '🇬🇧', name: 'English' },
+    zh: { flag: '🇨🇳', name: '中文' },
+    fr: { flag: '🇫🇷', name: 'Français' },
+    de: { flag: '🇩🇪', name: 'Deutsch' },
+    it: { flag: '🇮🇹', name: 'Italiano' },
+    es: { flag: '🇪🇸', name: 'Español' }
+};
+
+let currentLang = localStorage.getItem('app_lang') || 'ru';
+
+const translations = {
+    ru: {
+        app_name: "Облачный менеджер паролей",
+        app_slogan: "Ваши пароли в безопасности в облаке",
+        login_tab: "Вход",
+        register_tab: "Регистрация",
+        recover_tab: "Восстановление",
+        login_btn: "Войти",
+        register_btn: "Зарегистрироваться",
+        password_placeholder: "Пароль",
+        reg_password_placeholder: "Пароль (мин. 6 символов)",
+        confirm_password_placeholder: "Подтвердите пароль",
+        master_hint_placeholder: "Подсказка для мастер-пароля (необязательно)",
+        master_password_info: "Мастер-пароль — это пароль для шифрования ваших данных. Запомните его! Без него доступ к паролям будет невозможен.",
+        support_email_label: "Техподдержка",
+        recover_choose_method: "Выберите способ восстановления:",
+        recover_firebase_btn: "Восстановить пароль Firebase",
+        recover_master_hint_btn: "Напомнить мастер-пароль",
+        recover_support_btn: "Связаться с поддержкой",
+        recover_firebase_title: "Восстановление пароля",
+        recover_send_btn: "Отправить ссылку для сброса",
+        back_btn: "Назад",
+        master_hint_title: "Подсказка мастер-пароля",
+        send_hint_btn: "Отправить подсказку",
+        hint_info: "Подсказка была создана при регистрации.",
+        support_title: "Связаться с поддержкой",
+        support_response_time: "Время ответа: обычно в течение 24 часов",
+        support_info: "При обращении укажите ваш email и опишите проблему.",
+        encryption_note: "Все данные шифруются. Сервер не знает ваши пароли.",
+        synced: "Синхронизировано",
+        logout: "Выйти",
+        search_placeholder: "🔍 Поиск по сервису или логину...",
+        add_password_btn: "Добавить пароль",
+        export_csv_btn: "Экспорт в CSV",
+        import_passwords_btn: "Импорт паролей",
+        import_excel: "Excel / CSV файл",
+        import_google: "Google Chrome (CSV)",
+        import_yandex: "Яндекс.Пароли (CSV)",
+        import_icloud: "iCloud / iPhone (CSV)",
+        import_text: "Текстовый файл",
+        my_passwords_title: "Мои пароли",
+        add_password_title: "Добавить пароль",
+        edit_password_title: "Редактировать",
+        service_placeholder: "Сервис *",
+        username_placeholder: "Логин",
+        notes_placeholder: "Заметки",
+        save_btn: "Сохранить",
+        cancel_btn: "Отмена",
+        check_login_title: "Проверка входа",
+        url_placeholder: "Ссылка на сайт (https://...)",
+        copy_login_btn: "Копировать логин",
+        copy_password_btn: "Копировать пароль",
+        copy_all_btn: "Копировать всё",
+        test_login_btn: "Проверить",
+        mark_failed_btn: "Не работает",
+        close_btn: "Закрыть",
+        msg_fill_fields: "Заполните все поля",
+        msg_passwords_not_match: "Пароли не совпадают",
+        msg_password_min_length: "Пароль минимум 6 символов",
+        msg_reg_success: "Регистрация успешна!",
+        msg_hint_saved: "Ваша подсказка сохранена!",
+        msg_hint_advice: "Совет: добавьте подсказку для мастер-пароля в настройках профиля.",
+        msg_error: "Ошибка: ",
+        msg_service_password_required: "Сервис и пароль обязательны!",
+        msg_delete_confirm: "🗑️ Удалить запись?",
+        msg_login_empty: "❌ Логин пуст",
+        msg_password_empty: "❌ Пароль пуст",
+        msg_copy_login_success: "✅ Логин скопирован!",
+        msg_copy_password_success: "✅ Пароль скопирован!",
+        msg_copy_all_success: "✅ Логин и пароль скопированы!",
+        msg_no_data_copy: "❌ Нет данных для копирования",
+        msg_copy_failed: "❌ Не удалось скопировать",
+        msg_enter_url: "Введите ссылку на сайт",
+        msg_site_opened: "Сайт открыт в новой вкладке.",
+        msg_data_copied: "Данные скопированы!",
+        msg_instruction: "Инструкция:\n1. Перейдите на открытую вкладку\n2. Нажмите Ctrl+V (или Cmd+V на Mac), чтобы вставить данные\n3. Нажмите Войти",
+        msg_popup_blocked: "⚠️ Браузер заблокировал всплывающее окно. Разрешите всплывающие окна для этого сайта.",
+        msg_mark_failed: "⚠️ Пароль отмечен как нерабочий.",
+        msg_url_saved: "✅ URL сохранён! При следующей проверке он будет использован автоматически.",
+        msg_enter_url_to_save: "Введите URL для сохранения",
+        msg_import_google_help: "Как выгрузить пароли из Google Chrome:\n\n1. Откройте Chrome\n2. Нажмите на три точки → Настройки\n3. Автозаполнение → Пароли\n4. Нажмите три точки → Экспорт паролей\n5. Сохраните CSV файл\n6. После OK выберите этот файл",
+        msg_import_yandex_help: "Как выгрузить пароли из Яндекс.Браузера:\n\n1. Откройте Яндекс.Браузер\n2. Нажмите на три полоски → Настройки\n3. Пароли и карты → Пароли\n4. Нажмите \"Экспорт паролей\"\n5. Сохраните CSV файл\n6. После OK выберите этот файл",
+        msg_import_icloud_help: "Как выгрузить пароли из iCloud:\n\nНа Mac: Системные настройки → Пароли → выбрать все → экспорт\nНа iPhone: Настройки → Пароли → нажмите и удерживайте → экспорт\n\nПосле OK выберите CSV файл",
+        msg_xlsx_not_loaded: "Библиотека для чтения Excel не загружена. Пожалуйста, сохраните файл как CSV и импортируйте заново.",
+        msg_file_empty: "Файл пуст",
+        msg_headers_not_found: "Не удалось найти столбцы \"Сервис\" и/или \"Пароль\".",
+        msg_no_records: "Не найдено записей для импорта.",
+        msg_import_success: (imported, duplicates) => `✅ Импортировано: ${imported} записей\n⏭️ Пропущено (дубликаты): ${duplicates}`,
+        msg_import_fail: (total, dup) => `⚠️ Не удалось импортировать записи.\nНайдено: ${total}\nДубликатов: ${dup}`,
+        msg_password_reset_sent: (email) => `✅ Ссылка для сброса пароля отправлена на ${email}\n\nПроверьте почту (включая папку Спам).`,
+        msg_user_not_found: "❌ Пользователь с таким email не найден",
+        msg_master_hint_sent: (hint) => `📝 Ваша подсказка: "${hint}"\n\nЕсли не помогло, обратитесь в поддержку: halteh@mail.ru`,
+        msg_no_hint: "ℹ️ Подсказка не была установлена при регистрации.\n\nОбратитесь в поддержку: halteh@mail.ru",
+        msg_hint_saved_ok: "✅ Подсказка сохранена!\n\nПри восстановлении пароля вы сможете её увидеть.",
+        msg_hint_save_error: "❌ Ошибка сохранения: ",
+        msg_login_success: "✅ Вход выполнен успешно!",
+        msg_wrong_master_password: (attemptsLeft) => `❌ Неверный мастер-пароль!\nОсталось попыток: ${attemptsLeft}`,
+        msg_max_attempts: "❌ Превышено количество попыток. Выход из аккаунта.",
+        msg_enter_master_password: (attempts) => `Введите мастер-пароль для расшифровки данных:\n(Осталось попыток: ${attempts})`,
+        msg_no_passwords: "🔒 Нет сохранённых паролей",
+        msg_no_login: "без логина",
+        msg_modified: "изменено: ",
+        msg_copy_login_title: "Логин",
+        msg_copy_password_title: "Пароль"
+    },
+    en: {
+        app_name: "Cloud Password Manager",
+        app_slogan: "Your passwords are safe in the cloud",
+        login_tab: "Login",
+        register_tab: "Register",
+        recover_tab: "Recovery",
+        login_btn: "Sign In",
+        register_btn: "Sign Up",
+        password_placeholder: "Password",
+        reg_password_placeholder: "Password (min 6 chars)",
+        confirm_password_placeholder: "Confirm password",
+        master_hint_placeholder: "Master password hint (optional)",
+        master_password_info: "Master password is used to encrypt your data. Remember it! Without it, access to passwords is impossible.",
+        support_email_label: "Support",
+        recover_choose_method: "Choose recovery method:",
+        recover_firebase_btn: "Reset Firebase password",
+        recover_master_hint_btn: "Remind master password hint",
+        recover_support_btn: "Contact support",
+        recover_firebase_title: "Password recovery",
+        recover_send_btn: "Send reset link",
+        back_btn: "Back",
+        master_hint_title: "Master password hint",
+        send_hint_btn: "Send hint",
+        hint_info: "The hint was created during registration.",
+        support_title: "Contact support",
+        support_response_time: "Response time: usually within 24 hours",
+        support_info: "Please provide your email and describe the issue.",
+        encryption_note: "All data is encrypted. The server does not know your passwords.",
+        synced: "Synced",
+        logout: "Logout",
+        search_placeholder: "🔍 Search by service or login...",
+        add_password_btn: "Add password",
+        export_csv_btn: "Export to CSV",
+        import_passwords_btn: "Import passwords",
+        import_excel: "Excel / CSV file",
+        import_google: "Google Chrome (CSV)",
+        import_yandex: "Yandex.Passwords (CSV)",
+        import_icloud: "iCloud / iPhone (CSV)",
+        import_text: "Text file",
+        my_passwords_title: "My passwords",
+        add_password_title: "Add password",
+        edit_password_title: "Edit",
+        service_placeholder: "Service *",
+        username_placeholder: "Username",
+        notes_placeholder: "Notes",
+        save_btn: "Save",
+        cancel_btn: "Cancel",
+        check_login_title: "Check login",
+        url_placeholder: "Website URL (https://...)",
+        copy_login_btn: "Copy login",
+        copy_password_btn: "Copy password",
+        copy_all_btn: "Copy all",
+        test_login_btn: "Test",
+        mark_failed_btn: "Mark as failed",
+        close_btn: "Close",
+        msg_fill_fields: "Please fill in all fields",
+        msg_passwords_not_match: "Passwords do not match",
+        msg_password_min_length: "Password must be at least 6 characters",
+        msg_reg_success: "Registration successful!",
+        msg_hint_saved: "Your hint has been saved!",
+        msg_hint_advice: "Tip: add a master password hint in profile settings.",
+        msg_error: "Error: ",
+        msg_service_password_required: "Service and password are required!",
+        msg_delete_confirm: "🗑️ Delete entry?",
+        msg_login_empty: "❌ Login is empty",
+        msg_password_empty: "❌ Password is empty",
+        msg_copy_login_success: "✅ Login copied!",
+        msg_copy_password_success: "✅ Password copied!",
+        msg_copy_all_success: "✅ Login and password copied!",
+        msg_no_data_copy: "❌ No data to copy",
+        msg_copy_failed: "❌ Failed to copy",
+        msg_enter_url: "Please enter website URL",
+        msg_site_opened: "Website opened in a new tab.",
+        msg_data_copied: "Data copied!",
+        msg_instruction: "Instructions:\n1. Go to the opened tab\n2. Press Ctrl+V (or Cmd+V on Mac) to paste the data\n3. Click Sign In",
+        msg_popup_blocked: "⚠️ Browser blocked popup. Allow popups for this site.",
+        msg_mark_failed: "⚠️ Password marked as failed.",
+        msg_url_saved: "✅ URL saved! It will be used automatically next time.",
+        msg_enter_url_to_save: "Enter URL to save",
+        msg_import_google_help: "How to export passwords from Google Chrome:\n\n1. Open Chrome\n2. Click three dots → Settings\n3. Autofill → Passwords\n4. Click three dots → Export passwords\n5. Save CSV file\n6. After OK select this file",
+        msg_import_yandex_help: "How to export passwords from Yandex.Browser:\n\n1. Open Yandex.Browser\n2. Click three lines → Settings\n3. Passwords and cards → Passwords\n4. Click 'Export passwords'\n5. Save CSV file\n6. After OK select this file",
+        msg_import_icloud_help: "How to export passwords from iCloud:\n\nOn Mac: System Settings → Passwords → select all → export\nOn iPhone: Settings → Passwords → tap and hold → export\n\nAfter OK select CSV file",
+        msg_xlsx_not_loaded: "Excel library not loaded. Please save the file as CSV and import again.",
+        msg_file_empty: "File is empty",
+        msg_headers_not_found: "Could not find 'Service' and/or 'Password' columns.",
+        msg_no_records: "No records found for import.",
+        msg_import_success: (imported, duplicates) => `✅ Imported: ${imported} entries\n⏭️ Skipped (duplicates): ${duplicates}`,
+        msg_import_fail: (total, dup) => `⚠️ Failed to import entries.\nFound: ${total}\nDuplicates: ${dup}`,
+        msg_password_reset_sent: (email) => `✅ Password reset link sent to ${email}\n\nCheck your email (including spam folder).`,
+        msg_user_not_found: "❌ User with this email not found",
+        msg_master_hint_sent: (hint) => `📝 Your hint: "${hint}"\n\nIf it didn't help, contact support: halteh@mail.ru`,
+        msg_no_hint: "ℹ️ No hint was set during registration.\n\nPlease contact support: halteh@mail.ru",
+        msg_hint_saved_ok: "✅ Hint saved!\nYou can see it when recovering password.",
+        msg_hint_save_error: "❌ Error saving: ",
+        msg_login_success: "✅ Login successful!",
+        msg_wrong_master_password: (attemptsLeft) => `❌ Wrong master password!\nAttempts left: ${attemptsLeft}`,
+        msg_max_attempts: "❌ Maximum attempts exceeded. Logging out.",
+        msg_enter_master_password: (attempts) => `Enter master password to decrypt data:\n(Attempts left: ${attempts})`,
+        msg_no_passwords: "🔒 No saved passwords",
+        msg_no_login: "no login",
+        msg_modified: "modified: ",
+        msg_copy_login_title: "Login",
+        msg_copy_password_title: "Password"
+    }
+};
+
+// Заполняем для остальных языков копией английского
+for (let lang of ['zh', 'fr', 'de', 'it', 'es']) {
+    if (!translations[lang]) translations[lang] = { ...translations.en };
+}
+
+function t(key, ...args) {
+    let text = translations[currentLang]?.[key] || translations.ru[key] || key;
+    if (typeof text === 'function') return text(...args);
+    return text;
+}
+
+function updateUILanguage() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = t(key);
+    });
+    document.getElementById('authTitle').textContent = t('app_name');
+    const syncSpan = document.getElementById('syncStatus');
+    if (syncSpan) syncSpan.textContent = t('synced');
+}
+
+function setLanguage(lang) {
+    if (!languages[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('app_lang', lang);
+    updateUILanguage();
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function initLanguageSelector() {
+    const container = document.getElementById('langSelector');
+    container.innerHTML = '';
+    for (const [code, info] of Object.entries(languages)) {
+        const btn = document.createElement('button');
+        btn.className = 'lang-btn' + (code === currentLang ? ' active' : '');
+        btn.setAttribute('data-lang', code);
+        btn.innerHTML = info.flag;
+        btn.title = info.name;
+        btn.onclick = () => setLanguage(code);
+        container.appendChild(btn);
+    }
+}
+
+// ===================== TOAST =====================
+function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    let icon = '';
+    if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+    else if (type === 'error') icon = '<i class="fas fa-exclamation-circle"></i>';
+    else if (type === 'warning') icon = '<i class="fas fa-exclamation-triangle"></i>';
+    else icon = '<i class="fas fa-info-circle"></i>';
+    
+    toast.innerHTML = `
+        ${icon}
+        <div class="toast-message">${message}</div>
+        <button class="toast-close">&times;</button>
+    `;
+    container.appendChild(toast);
+    
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.onclick = () => toast.remove();
+    
+    setTimeout(() => {
+        if (toast.parentNode) toast.remove();
+    }, duration);
+}
+
+// ===================== SKELETON =====================
+function showSkeleton() {
+    const container = document.getElementById('passwordsList');
+    if (!container) return;
+    container.innerHTML = `
+        <div class="skeleton skeleton-item">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-text" style="width: 60%; margin-top: 8px;"></div>
+            <div class="skeleton skeleton-actions"></div>
+        </div>
+        <div class="skeleton skeleton-item">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-text" style="width: 40%; margin-top: 8px;"></div>
+            <div class="skeleton skeleton-actions"></div>
+        </div>
+    `;
+}
+
+function hideSkeleton() {
+    // не требуется, будет заменено рендерингом
+}
+
+// ============= FIREBASE И ОСНОВНЫЕ ФУНКЦИИ =============
 const firebaseConfig = {
     apiKey: "AIzaSyD0_0HEiKov6a1IHZwL8zLgCh-V_28vQIs",
     authDomain: "password-manager-app-3ec4d.firebaseapp.com",
@@ -10,103 +335,29 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth     = firebase.auth();
-const db       = firebase.firestore();
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 let currentUser = null;
-let passwords   = [];
-let masterKey   = null;
-let customUrls  = {};
+let passwords = [];
+let masterKey = null;
+let customUrls = {};
 
-// ============= ТЁМНАЯ ТЕМА =============
-function initTheme() {
-    if (localStorage.getItem('darkTheme') === '1') {
-        document.body.classList.add('dark-theme');
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) btn.innerHTML = '<i class="fas fa-sun"></i> <span>Светлая</span>';
-    }
-}
-
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark-theme');
-    localStorage.setItem('darkTheme', isDark ? '1' : '0');
-    const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.innerHTML = isDark
-        ? '<i class="fas fa-sun"></i> <span>Светлая</span>'
-        : '<i class="fas fa-moon"></i> <span>Тёмная</span>';
-}
-
-initTheme();
-
-// ============= АВТОБЛОКИРОВКА =============
-const LOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 минут
-let lockTimer = null;
-
-function resetLockTimer() {
-    if (!currentUser || !masterKey) return;
-    if (lockTimer) clearTimeout(lockTimer);
-    lockTimer = setTimeout(lockApp, LOCK_TIMEOUT_MS);
-}
-
-function lockApp() {
-    masterKey = null;
-    passwords  = [];
-    if (lockTimer) { clearTimeout(lockTimer); lockTimer = null; }
-    document.getElementById('lockScreen').style.display = 'flex';
-    document.getElementById('unlockPassword').value = '';
-    document.getElementById('unlockError').textContent = '';
-}
-
-async function unlockApp() {
-    const pwd = document.getElementById('unlockPassword').value;
-    const errEl = document.getElementById('unlockError');
-    errEl.textContent = '';
-
-    if (!pwd) { errEl.textContent = '⚠️ Введите мастер-пароль'; return; }
-    if (!currentUser) { window.location.reload(); return; }
-
-    const testKey = deriveKey(pwd, currentUser.uid);
-    try {
-        const doc = await db.collection('users').doc(currentUser.uid).get();
-        if (!doc.exists) { errEl.textContent = '❌ Ошибка загрузки данных'; return; }
-        const decrypted = decryptData(doc.data().encryptedData, testKey);
-        if (decrypted === null) {
-            errEl.textContent = '❌ Неверный мастер-пароль';
-            return;
-        }
-        masterKey = testKey;
-        passwords  = decrypted;
-        passwords.forEach(p => {
-            if (p.showPassword === undefined) p.showPassword = false;
-            if (p.needsCheck   === undefined) p.needsCheck   = false;
-        });
-        renderPasswords();
-        document.getElementById('lockScreen').style.display = 'none';
-        resetLockTimer();
-    } catch (e) {
-        errEl.textContent = '❌ Ошибка: ' + e.message;
-    }
-}
-
-// Сброс таймера при любой активности пользователя
-['click','keydown','mousemove','touchstart'].forEach(evt => {
-    document.addEventListener(evt, () => { if (masterKey) resetLockTimer(); }, { passive: true });
-});
-
-// ============= ПОЛЬЗОВАТЕЛЬСКИЕ URL =============
 function loadCustomUrls() {
-    try { customUrls = JSON.parse(localStorage.getItem('customSiteUrls') || '{}'); }
-    catch(e) { customUrls = {}; }
+    const saved = localStorage.getItem('customSiteUrls');
+    if (saved) {
+        try { customUrls = JSON.parse(saved); } catch(e) {}
+    }
 }
 
 function saveCustomUrl(service, url) {
-    customUrls[service.toLowerCase().trim()] = url;
+    const key = service.toLowerCase().trim();
+    customUrls[key] = url;
     localStorage.setItem('customSiteUrls', JSON.stringify(customUrls));
 }
 
 loadCustomUrls();
 
-// ============= ШИФРОВАНИЕ =============
 function deriveKey(password, salt) {
     return CryptoJS.PBKDF2(password, salt, { keySize: 256 / 32, iterations: 10000 }).toString();
 }
@@ -122,73 +373,73 @@ function decryptData(encrypted, key) {
     } catch(e) { return null; }
 }
 
-// ============= АУТЕНТИФИКАЦИЯ =============
 async function login() {
-    const email    = document.getElementById('loginEmail').value;
+    const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    if (!email || !password) { alert('Заполните все поля'); return; }
+    if (!email || !password) { showToast(t('msg_fill_fields'), 'error'); return; }
     try {
-        const cred = await auth.signInWithEmailAndPassword(email, password);
-        currentUser = cred.user;
-        masterKey   = deriveKey(password, currentUser.uid);
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = userCredential.user;
+        masterKey = deriveKey(password, currentUser.uid);
         await loadUserData();
-        showMainApp();
-    } catch (e) { alert('Ошибка: ' + e.message); }
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('userEmail').textContent = currentUser.email;
+        showToast(t('msg_login_success'), 'success');
+    } catch (error) { showToast(t('msg_error') + error.message, 'error'); }
 }
 
 async function register() {
-    const email      = document.getElementById('regEmail').value;
-    const password   = document.getElementById('regPassword').value;
-    const confirm    = document.getElementById('regConfirm').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
     const masterHint = document.getElementById('regMasterHint').value;
-
-    if (!email || !password) { alert('Заполните все поля'); return; }
-    if (password !== confirm) { alert('Пароли не совпадают'); return; }
-    if (password.length < 6)  { alert('Пароль минимум 6 символов'); return; }
-
+    
+    if (!email || !password) { showToast(t('msg_fill_fields'), 'error'); return; }
+    if (password !== confirm) { showToast(t('msg_passwords_not_match'), 'error'); return; }
+    if (password.length < 6) { showToast(t('msg_password_min_length'), 'error'); return; }
+    
     try {
-        const cred  = await auth.createUserWithEmailAndPassword(email, password);
-        currentUser = cred.user;
-        masterKey   = deriveKey(password, currentUser.uid);
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = userCredential.user;
+        masterKey = deriveKey(password, currentUser.uid);
+        
         await db.collection('users').doc(currentUser.uid).set({
             encryptedData: encryptData([], masterKey),
-            email:         email,
-            masterHint:    masterHint || '',
-            lastUpdated:   firebase.firestore.FieldValue.serverTimestamp()
+            email: email,
+            masterHint: masterHint || '',
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         });
+        
         passwords = [];
         renderPasswords();
-        showMainApp();
-        alert('Регистрация успешна!' + (masterHint ? '\nПодсказка сохранена!' : ''));
-    } catch (e) { alert('Ошибка: ' + e.message); }
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('userEmail').textContent = currentUser.email;
+        showToast(t('msg_reg_success') + (masterHint ? ' ' + t('msg_hint_saved') : ''), 'success');
+    } catch (error) { 
+        showToast(t('msg_error') + error.message, 'error');
+    }
 }
 
 async function logout() {
-    if (lockTimer) { clearTimeout(lockTimer); lockTimer = null; }
     await auth.signOut();
     currentUser = null;
-    masterKey   = null;
-    passwords   = [];
-    document.getElementById('authScreen').style.display  = 'flex';
-    document.getElementById('mainApp').style.display     = 'none';
-    document.getElementById('lockScreen').style.display  = 'none';
-}
-
-function showMainApp() {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display    = 'block';
-    document.getElementById('userEmail').textContent    = currentUser.email || currentUser.phoneNumber || '';
-    resetLockTimer();
+    masterKey = null;
+    passwords = [];
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
 }
 
 async function loadUserData() {
+    showSkeleton();
     const doc = await db.collection('users').doc(currentUser.uid).get();
     if (doc.exists && doc.data().encryptedData) {
         const decrypted = decryptData(doc.data().encryptedData, masterKey);
         passwords = decrypted || [];
-        passwords.forEach(p => {
-            if (p.showPassword === undefined) p.showPassword = false;
-            if (p.needsCheck   === undefined) p.needsCheck   = false;
+        passwords.forEach(p => { 
+            if (p.showPassword === undefined) p.showPassword = false; 
+            if (p.needsCheck === undefined) p.needsCheck = false;
         });
     } else { passwords = []; }
     renderPasswords();
@@ -196,618 +447,329 @@ async function loadUserData() {
 
 async function saveUserData() {
     if (!currentUser || !masterKey) return;
+    const encrypted = encryptData(passwords, masterKey);
     await db.collection('users').doc(currentUser.uid).set({
-        encryptedData: encryptData(passwords, masterKey),
-        email:         currentUser.email || '',
-        lastUpdated:   firebase.firestore.FieldValue.serverTimestamp()
+        encryptedData: encrypted,
+        email: currentUser.email,
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
-    const el = document.getElementById('syncStatus');
-    if (el) el.innerHTML = '<i class="fas fa-check-circle"></i> Синхронизировано';
+    const statusElem = document.getElementById('syncStatus');
+    statusElem.innerHTML = '<i class="fas fa-check-circle"></i> ' + t('synced');
+    setTimeout(() => { statusElem.innerHTML = '<i class="fas fa-check-circle"></i> ' + t('synced'); }, 2000);
 }
 
-// ============= ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =============
 function switchAuthTab(tab) {
-    const forms = { login: 'loginForm', register: 'registerForm', recover: 'recoverForm' };
-    Object.values(forms).forEach(id => document.getElementById(id).classList.remove('active'));
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(forms[tab]).classList.add('active');
-    document.querySelectorAll('.auth-tab')[['login','register','recover'].indexOf(tab)].classList.add('active');
-    backToRecoverMenu();
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const recoverForm = document.getElementById('recoverForm');
+    const tabs = document.querySelectorAll('.auth-tab');
+    
+    tabs.forEach(t => t.classList.remove('active'));
+    
+    if (tab === 'login') {
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        recoverForm.classList.remove('active');
+        tabs[0].classList.add('active');
+        document.getElementById('recoverStep1').style.display = 'block';
+        document.getElementById('recoverByEmail').style.display = 'none';
+        document.getElementById('masterHintPanel').style.display = 'none';
+        document.getElementById('supportContact').style.display = 'none';
+    } else if (tab === 'register') {
+        loginForm.classList.remove('active');
+        registerForm.classList.add('active');
+        recoverForm.classList.remove('active');
+        tabs[1].classList.add('active');
+    } else if (tab === 'recover') {
+        loginForm.classList.remove('active');
+        registerForm.classList.remove('active');
+        recoverForm.classList.add('active');
+        tabs[2].classList.add('active');
+        document.getElementById('recoverStep1').style.display = 'block';
+        document.getElementById('recoverByEmail').style.display = 'none';
+        document.getElementById('masterHintPanel').style.display = 'none';
+        document.getElementById('supportContact').style.display = 'none';
+    }
 }
 
-function showRecoverByEmail()  { _showRecoverPanel('recoverByEmail'); }
-function showMasterHint()      { _showRecoverPanel('masterHintPanel'); }
-function showSupportContact()  { _showRecoverPanel('supportContact'); }
+function showRecoverByEmail() {
+    document.getElementById('recoverStep1').style.display = 'none';
+    document.getElementById('recoverByEmail').style.display = 'block';
+}
 
-function _showRecoverPanel(panelId) {
-    ['recoverStep1','recoverByEmail','masterHintPanel','supportContact'].forEach(id => {
-        document.getElementById(id).style.display = id === panelId ? 'block' : 'none';
-    });
+function showMasterHint() {
+    document.getElementById('recoverStep1').style.display = 'none';
+    document.getElementById('masterHintPanel').style.display = 'block';
+}
+
+function showSupportContact() {
+    document.getElementById('recoverStep1').style.display = 'none';
+    document.getElementById('supportContact').style.display = 'block';
 }
 
 function backToRecoverMenu() {
-    ['recoverByEmail','masterHintPanel','supportContact'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
-    });
     document.getElementById('recoverStep1').style.display = 'block';
+    document.getElementById('recoverByEmail').style.display = 'none';
+    document.getElementById('masterHintPanel').style.display = 'none';
+    document.getElementById('supportContact').style.display = 'none';
 }
 
 async function sendPasswordReset() {
     const email = document.getElementById('recoverEmail').value;
-    if (!email) { alert('Введите ваш email'); return; }
+    if (!email) { showToast(t('msg_fill_fields'), 'error'); return; }
+    
+    await auth.setLanguageCode('ru');
+    
     try {
         await auth.sendPasswordResetEmail(email);
-        alert(`✅ Ссылка отправлена на ${email}. Проверьте папку Спам.`);
+        showToast(t('msg_password_reset_sent', email), 'success');
         backToRecoverMenu();
-    } catch (e) {
-        alert(e.code === 'auth/user-not-found' ? '❌ Пользователь не найден' : '❌ Ошибка: ' + e.message);
+    } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+            showToast(t('msg_user_not_found'), 'error');
+        } else {
+            showToast(t('msg_error') + error.message, 'error');
+        }
     }
 }
 
 async function sendMasterHint() {
     const email = document.getElementById('hintEmail').value;
-    if (!email) { alert('Введите email'); return; }
+    if (!email) { showToast(t('msg_fill_fields'), 'error'); return; }
+    
     try {
-        const snap = await db.collection('users').where('email','==',email).get();
-        if (snap.empty) { alert('❌ Пользователь не найден'); return; }
-        const hint = snap.docs[0].data().masterHint;
-        alert(hint
-            ? `📝 Ваша подсказка: "${hint}"`
-            : 'ℹ️ Подсказка не задана. Обратитесь: halteh@mail.ru');
+        const usersSnapshot = await db.collection('users').where('email', '==', email).get();
+        
+        if (usersSnapshot.empty) {
+            showToast(t('msg_user_not_found'), 'error');
+            return;
+        }
+        
+        const userDoc = usersSnapshot.docs[0];
+        const userData = userDoc.data();
+        
+        if (userData.masterHint && userData.masterHint.trim() !== '') {
+            showToast(t('msg_master_hint_sent', userData.masterHint), 'info');
+        } else {
+            showToast(t('msg_no_hint'), 'warning');
+        }
         backToRecoverMenu();
-    } catch (e) { alert('❌ Ошибка. Напишите: halteh@mail.ru'); }
+    } catch (error) {
+        console.error(error);
+        showToast('❌ Ошибка при получении подсказки. Обратитесь в поддержку: halteh@mail.ru', 'error');
+    }
 }
 
 function showMasterHintDialog() {
     if (!currentUser) return;
     db.collection('users').doc(currentUser.uid).get().then(doc => {
-        const cur  = doc.exists ? (doc.data().masterHint || '') : '';
-        const hint = prompt(`Подсказка для мастер-пароля:\nТекущая: ${cur || 'не задана'}`);
-        if (hint !== null) {
-            db.collection('users').doc(currentUser.uid).update({ masterHint: hint, email: currentUser.email })
-              .then(() => alert('✅ Подсказка сохранена!'))
-              .catch(e => alert('❌ Ошибка: ' + e.message));
+        const currentHint = doc.exists ? (doc.data().masterHint || '') : '';
+        const newHint = prompt('Введите подсказку для мастер-пароля (чтобы не забыть его):\n\nПример: "Мой любимый фильм" или "Дата рождения"\n\nЕсли не хотите менять, нажмите Отмена', currentHint);
+        if (newHint !== null) {
+            db.collection('users').doc(currentUser.uid).update({
+                masterHint: newHint,
+                email: currentUser.email
+            }).then(() => showToast(t('msg_hint_saved_ok'), 'success'))
+            .catch(error => showToast(t('msg_hint_save_error') + error.message, 'error'));
         }
     });
 }
 
-// ============= GOOGLE ВХОД =============
-async function loginWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-        const result = await auth.signInWithPopup(provider);
-        await handleSocialLogin(result.user);
-    } catch (e) { alert('Не удалось войти через Google: ' + e.message); }
+function escapeHtml(text) { 
+    if (!text) return '';
+    const div = document.createElement('div'); 
+    div.textContent = text; 
+    return div.innerHTML; 
 }
 
-// ============= ТЕЛЕФОННЫЙ ВХОД =============
-let phoneConfirmationResult = null;
-
-function showPhoneLogin() {
-    document.getElementById('phoneStep1').style.display = 'block';
-    document.getElementById('phoneStep2').style.display = 'none';
-    document.getElementById('phoneNumber').value = '';
-    document.getElementById('phoneCode').value   = '';
-    document.getElementById('phoneResult').innerHTML = '';
-    document.getElementById('phoneModal').style.display = 'flex';
-}
-
-async function sendPhoneCode() {
-    const phone = document.getElementById('phoneNumber').value.trim();
-    if (!phone) { alert('Введите номер телефона'); return; }
-    try {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            size: 'invisible', callback: () => {}
-        });
-        phoneConfirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
-        document.getElementById('phoneStep1').style.display = 'none';
-        document.getElementById('phoneStep2').style.display = 'block';
-        document.getElementById('phoneResult').textContent = `Код отправлен на ${phone}`;
-    } catch (e) { alert('Ошибка отправки кода: ' + e.message); }
-}
-
-async function verifyPhoneCode() {
-    const code = document.getElementById('phoneCode').value.trim();
-    if (!code) { alert('Введите код'); return; }
-    try {
-        const result = await phoneConfirmationResult.confirm(code);
-        await handleSocialLogin(result.user);
-        closeModal('phoneModal');
-    } catch (e) { alert('Неверный код: ' + e.message); }
-}
-
-// ============= СОЦИАЛЬНЫЙ ВХОД (общий) =============
-async function handleSocialLogin(user) {
-    const docRef = db.collection('users').doc(user.uid);
-    const doc    = await docRef.get();
-
-    if (!doc.exists) {
-        const pwd = prompt('Придумайте мастер-пароль для шифрования (запомните его!):');
-        if (!pwd) { await auth.signOut(); alert('Мастер-пароль обязателен.'); return; }
-        masterKey   = deriveKey(pwd, user.uid);
-        currentUser = user;
-        await docRef.set({
-            encryptedData: encryptData([], masterKey),
-            email: user.email || '',
-            phoneNumber: user.phoneNumber || '',
-            masterHint: '',
-            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        passwords = [];
+function toggleShowPassword(id) {
+    const index = passwords.findIndex(p => p.id === id);
+    if (index !== -1) {
+        passwords[index].showPassword = !passwords[index].showPassword;
         renderPasswords();
-        showMainApp();
-        alert('✅ Регистрация успешна!');
-    } else {
-        for (let attempt = 0; attempt < 3; attempt++) {
-            const pwd = prompt(`Введите мастер-пароль (осталось попыток: ${3 - attempt}):`);
-            if (!pwd) { await auth.signOut(); return; }
-            const testKey   = deriveKey(pwd, user.uid);
-            const decrypted = decryptData(doc.data().encryptedData, testKey);
-            if (decrypted !== null) {
-                masterKey   = testKey;
-                passwords   = decrypted;
-                passwords.forEach(p => {
-                    if (p.showPassword === undefined) p.showPassword = false;
-                    if (p.needsCheck   === undefined) p.needsCheck   = false;
-                });
-                currentUser = user;
-                renderPasswords();
-                showMainApp();
-                return;
-            }
-            if (attempt < 2) alert(`❌ Неверный мастер-пароль. Осталось: ${2 - attempt}`);
-        }
-        alert('❌ Превышено количество попыток.'); await auth.signOut();
     }
 }
 
-// Восстановление сессии при перезагрузке страницы
-auth.onAuthStateChanged(async (user) => {
-    if (user && !currentUser) {
-        for (let attempt = 0; attempt < 3; attempt++) {
-            const pwd = prompt(`Введите мастер-пароль (осталось попыток: ${3 - attempt}):`);
-            if (!pwd) { await auth.signOut(); return; }
-            const testKey = deriveKey(pwd, user.uid);
-            const doc     = await db.collection('users').doc(user.uid).get();
-            if (doc.exists && doc.data().encryptedData) {
-                const decrypted = decryptData(doc.data().encryptedData, testKey);
-                if (decrypted !== null) {
-                    currentUser = user;
-                    masterKey   = testKey;
-                    passwords   = decrypted;
-                    passwords.forEach(p => {
-                        if (p.showPassword === undefined) p.showPassword = false;
-                        if (p.needsCheck   === undefined) p.needsCheck   = false;
-                    });
-                    renderPasswords();
-                    showMainApp();
-                    return;
-                }
-            } else {
-                // Новый пользователь — нет зашифрованных данных
-                currentUser = user;
-                masterKey   = testKey;
-                passwords   = [];
-                renderPasswords();
-                showMainApp();
-                return;
-            }
-            if (attempt < 2) alert(`❌ Неверный мастер-пароль. Осталось: ${2 - attempt}`);
-        }
-        alert('❌ Превышено количество попыток.'); await auth.signOut();
+async function copyText(text, type) {
+    if (!text || text === 'без логина' || text === '' || text === 'no login') {
+        showToast(`❌ ${type} ${t('msg_login_empty')}`, 'error');
+        return;
     }
-});
-
-// ============= ГЕНЕРАТОР ПАРОЛЕЙ =============
-const CHAR_SETS = {
-    lower:   'abcdefghijklmnopqrstuvwxyz',
-    upper:   'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    numbers: '0123456789',
-    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
-};
-
-function generatePassword(length = 16, opts = { lower: true, upper: true, numbers: true, symbols: true }) {
-    let chars = '';
-    if (opts.lower)   chars += CHAR_SETS.lower;
-    if (opts.upper)   chars += CHAR_SETS.upper;
-    if (opts.numbers) chars += CHAR_SETS.numbers;
-    if (opts.symbols) chars += CHAR_SETS.symbols;
-    if (!chars) chars = CHAR_SETS.lower + CHAR_SETS.numbers;
-
-    const arr = new Uint32Array(length);
-    crypto.getRandomValues(arr);
-    return Array.from(arr, n => chars[n % chars.length]).join('');
+    await navigator.clipboard.writeText(text);
+    showToast(`📋 ${type} ${t('msg_copy_login_success')}`, 'success');
 }
 
-function openGeneratorModal(targetFieldId) {
-    document.getElementById('generatorModal').style.display = 'flex';
-    document.getElementById('generatorModal').dataset.target = targetFieldId || '';
-    refreshGeneratorOutput();
-}
-
-function refreshGeneratorOutput() {
-    const length = parseInt(document.getElementById('genLength').value) || 16;
-    document.getElementById('genLengthValue').textContent = length;
-    const opts = {
-        lower:   document.getElementById('genLower').checked,
-        upper:   document.getElementById('genUpper').checked,
-        numbers: document.getElementById('genNumbers').checked,
-        symbols: document.getElementById('genSymbols').checked
-    };
-    const pwd = generatePassword(length, opts);
-    document.getElementById('generatorOutput').textContent = pwd;
-    // Показать индикатор надёжности в модальном окне генератора
-    updateStrengthUI('genStrengthBar', 'genStrengthLabel', pwd);
-}
-
-async function copyGeneratedPassword() {
-    const pwd = document.getElementById('generatorOutput').textContent;
-    if (!pwd) return;
-    try {
-        await navigator.clipboard.writeText(pwd);
-        const btn = document.getElementById('genCopyBtn');
-        btn.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
-        setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> Копировать'; }, 1500);
-    } catch(e) { alert('Не удалось скопировать'); }
-}
-
-function useGeneratedPassword() {
-    const pwd      = document.getElementById('generatorOutput').textContent;
-    const targetId = document.getElementById('generatorModal').dataset.target;
-    if (targetId && document.getElementById(targetId)) {
-        document.getElementById(targetId).value = pwd;
-        // Обновить индикатор в форме добавления/редактирования
-        if (targetId === 'addPassword')  updateStrengthUI('addStrengthBar',  'addStrengthLabel',  pwd);
-        if (targetId === 'editPassword') updateStrengthUI('editStrengthBar', 'editStrengthLabel', pwd);
-        document.getElementById(targetId).dispatchEvent(new Event('input'));
+function renderPasswords() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = passwords.filter(p => 
+        p.service.toLowerCase().includes(searchText) || 
+        (p.username && p.username.toLowerCase().includes(searchText))
+    );
+    const container = document.getElementById('passwordsList');
+    if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;"><i class="fas fa-lock"></i> ' + t('msg_no_passwords') + '</p>';
+        return;
     }
-    closeModal('generatorModal');
+    container.innerHTML = filtered.map(p => `
+        <div class="password-item">
+            <div class="password-info">
+                <div class="password-service">
+                    <i class="fas fa-globe"></i> ${escapeHtml(p.service)}
+                    ${p.needsCheck ? '<span class="check-badge"><i class="fas fa-exclamation-triangle"></i> ' + t('mark_failed_btn') + '</span>' : ''}
+                </div>
+                <div class="password-username"><i class="fas fa-user"></i> ${escapeHtml(p.username || t('msg_no_login'))}</div>
+                <div class="password-pass"><i class="fas fa-key"></i> ${p.showPassword ? escapeHtml(p.password) : '••••••••'}</div>
+                ${p.lastUpdated ? `<div style="font-size: 11px; color: #999; margin-top: 6px;"><i class="far fa-calendar-alt"></i> ${t('msg_modified')} ${escapeHtml(p.lastUpdated)}</div>` : ''}
+            </div>
+            <div class="password-actions">
+                <button class="small-btn btn-outline" onclick="toggleShowPassword(${p.id})"><i class="fas ${p.showPassword ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
+                <button class="small-btn btn-outline" onclick="copyText('${escapeHtml(p.username || '').replace(/'/g, "\\'")}', '${t('msg_copy_login_title')}')"><i class="fas fa-copy"></i> ${t('copy_login_btn')}</button>
+                <button class="small-btn btn-outline" onclick="copyText('${escapeHtml(p.password).replace(/'/g, "\\'")}', '${t('msg_copy_password_title')}')"><i class="fas fa-copy"></i> ${t('copy_password_btn')}</button>
+                <button class="small-btn btn-outline" onclick="openCheckModal(${p.id})"><i class="fas fa-search"></i></button>
+                <button class="small-btn btn-warning" onclick="showEditModal(${p.id})"><i class="fas fa-edit"></i></button>
+                <button class="small-btn btn-danger" onclick="deletePassword(${p.id})"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+    `).join('');
 }
 
-// ============= ИНДИКАТОР НАДЁЖНОСТИ =============
-function getStrengthInfo(password) {
-    if (!password) return { pct: 0, label: '', color: '#e5e7eb' };
-    let score = 0;
-    if (password.length >= 8)  score++;
-    if (password.length >= 12) score++;
-    if (password.length >= 16) score++;
-    if (/[a-z]/.test(password))        score++;
-    if (/[A-Z]/.test(password))        score++;
-    if (/[0-9]/.test(password))        score++;
-    if (/[^a-zA-Z0-9]/.test(password)) score++;
-
-    if (score <= 2) return { pct: 20,  label: '😟 Слабый',        color: '#ef4444' };
-    if (score <= 3) return { pct: 45,  label: '😐 Средний',       color: '#f59e0b' };
-    if (score <= 5) return { pct: 70,  label: '😊 Сильный',       color: '#10b981' };
-                    return { pct: 100, label: '🔥 Очень сильный', color: '#059669' };
-}
-
-function updateStrengthUI(barId, labelId, password) {
-    const info = getStrengthInfo(password);
-    const bar  = document.getElementById(barId);
-    const lbl  = document.getElementById(labelId);
-    if (!bar || !lbl) return;
-    const meter = bar.closest('.strength-meter');
-    if (meter) meter.style.display = password ? 'block' : 'none';
-    bar.style.width      = info.pct + '%';
-    bar.style.background = info.color;
-    lbl.textContent      = info.label;
-    lbl.style.color      = info.color;
-}
-
-// ============= ДОБАВЛЕНИЕ / РЕДАКТИРОВАНИЕ ПАРОЛЕЙ =============
 function showAddModal() {
     document.getElementById('addModal').style.display = 'flex';
-    ['addService','addUsername','addPassword','addNotes'].forEach(id => {
-        document.getElementById(id).value = '';
-    });
-    updateStrengthUI('addStrengthBar', 'addStrengthLabel', '');
+    document.getElementById('addService').value = '';
+    document.getElementById('addUsername').value = '';
+    document.getElementById('addPassword').value = '';
+    document.getElementById('addNotes').value = '';
 }
 
 async function addPassword() {
-    const service  = document.getElementById('addService').value.trim();
+    const service = document.getElementById('addService').value.trim();
     const password = document.getElementById('addPassword').value.trim();
-    if (!service || !password) { alert('Сервис и пароль обязательны!'); return; }
-    const newId = passwords.length ? Math.max(...passwords.map(p => p.id)) + 1 : 1;
+    if (!service || !password) { showToast(t('msg_service_password_required'), 'error'); return; }
+    const newId = passwords.length > 0 ? Math.max(...passwords.map(p => p.id)) + 1 : 1;
     passwords.push({
-        id:          newId,
-        service:     service,
-        username:    document.getElementById('addUsername').value.trim(),
-        password:    password,
-        notes:       document.getElementById('addNotes').value.trim(),
+        id: newId,
+        service: service,
+        username: document.getElementById('addUsername').value.trim(),
+        password: password,
+        notes: document.getElementById('addNotes').value.trim(),
         lastUpdated: new Date().toLocaleString(),
         showPassword: false,
-        needsCheck:   false
+        needsCheck: false
     });
     await saveUserData();
     closeModal('addModal');
     renderPasswords();
+    showToast('✅ ' + t('msg_added'), 'success');
 }
 
 function showEditModal(id) {
     const p = passwords.find(p => p.id === id);
-    if (!p) return;
-    document.getElementById('editId').value       = id;
-    document.getElementById('editService').value  = p.service;
-    document.getElementById('editUsername').value = p.username || '';
-    document.getElementById('editPassword').value = p.password;
-    document.getElementById('editNotes').value    = p.notes || '';
-    updateStrengthUI('editStrengthBar', 'editStrengthLabel', p.password);
-    document.getElementById('editModal').style.display = 'flex';
+    if (p) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editService').value = p.service;
+        document.getElementById('editUsername').value = p.username || '';
+        document.getElementById('editPassword').value = p.password;
+        document.getElementById('editNotes').value = p.notes || '';
+        document.getElementById('editModal').style.display = 'flex';
+    }
 }
 
 async function updatePassword() {
-    const id    = parseInt(document.getElementById('editId').value);
+    const id = parseInt(document.getElementById('editId').value);
     const index = passwords.findIndex(p => p.id === id);
     if (index !== -1) {
         passwords[index] = {
             ...passwords[index],
-            service:     document.getElementById('editService').value.trim(),
-            username:    document.getElementById('editUsername').value.trim(),
-            password:    document.getElementById('editPassword').value.trim(),
-            notes:       document.getElementById('editNotes').value.trim(),
+            service: document.getElementById('editService').value.trim(),
+            username: document.getElementById('editUsername').value.trim(),
+            password: document.getElementById('editPassword').value.trim(),
+            notes: document.getElementById('editNotes').value.trim(),
             lastUpdated: new Date().toLocaleString(),
-            needsCheck:  false
+            needsCheck: false
         };
         await saveUserData();
     }
     closeModal('editModal');
     renderPasswords();
+    showToast('✅ ' + t('msg_updated'), 'success');
 }
 
 async function deletePassword(id) {
-    if (!confirm('🗑️ Удалить запись?')) return;
-    passwords = passwords.filter(p => p.id !== id);
-    await saveUserData();
-    renderPasswords();
-}
-
-// ============= УТИЛИТЫ =============
-function escapeHtml(text) {
-    if (!text) return '';
-    const d = document.createElement('div');
-    d.textContent = text;
-    return d.innerHTML;
-}
-
-function toggleShowPassword(id) {
-    const p = passwords.find(p => p.id === id);
-    if (p) { p.showPassword = !p.showPassword; renderPasswords(); }
-}
-
-async function copyText(text, type) {
-    if (!text) { alert(`❌ ${type} пуст`); return; }
-    try {
-        await navigator.clipboard.writeText(text);
-        alert(`📋 ${type} скопирован!`);
-    } catch(e) { alert(`❌ Не удалось скопировать ${type}`); }
+    if (confirm(t('msg_delete_confirm'))) {
+        passwords = passwords.filter(p => p.id !== id);
+        await saveUserData();
+        renderPasswords();
+        showToast('🗑️ ' + t('msg_deleted'), 'info');
+    }
 }
 
 function filterPasswords() { renderPasswords(); }
 
-// ============= РЕНДЕР ПАРОЛЕЙ =============
-function renderPasswords() {
-    const searchText = (document.getElementById('searchInput')?.value || '').toLowerCase();
-    const filtered   = passwords.filter(p =>
-        p.service.toLowerCase().includes(searchText) ||
-        (p.username && p.username.toLowerCase().includes(searchText))
-    );
-    const container = document.getElementById('passwordsList');
-    if (!container) return;
-
-    const total  = passwords.length;
-    const el     = document.getElementById('passwordCount');
-    if (el) el.textContent = total;
-
-    if (!filtered.length) {
-        container.innerHTML = '<p style="text-align:center;color:var(--text-secondary)"><i class="fas fa-lock"></i> Нет сохранённых паролей</p>';
-        return;
-    }
-
-    container.innerHTML = filtered.map(p => {
-        const strength = getStrengthInfo(p.password);
-        const strengthDot = p.password
-            ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${strength.color};margin-right:4px;" title="${strength.label}"></span>`
-            : '';
-        return `
-        <div class="password-item">
-            <div class="password-info">
-                <div class="password-service">
-                    <img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(p.service)}&sz=16"
-                         width="16" height="16" style="vertical-align:middle;margin-right:6px;" alt="">
-                    ${escapeHtml(p.service)}
-                    ${p.needsCheck ? '<span class="check-badge"><i class="fas fa-exclamation-triangle"></i> не работает</span>' : ''}
-                </div>
-                <div class="password-username"><i class="fas fa-user"></i> ${escapeHtml(p.username || 'без логина')}</div>
-                <div class="password-pass">${strengthDot}<i class="fas fa-key"></i> ${p.showPassword ? escapeHtml(p.password) : '••••••••'}</div>
-                ${p.lastUpdated ? `<div class="password-date"><i class="far fa-calendar-alt"></i> изменено: ${escapeHtml(p.lastUpdated)}</div>` : ''}
-            </div>
-            <div class="password-actions">
-                <button class="small-btn btn-outline" onclick="toggleShowPassword(${p.id})" title="${p.showPassword ? 'Скрыть' : 'Показать'}">
-                    <i class="fas ${p.showPassword ? 'fa-eye-slash' : 'fa-eye'}"></i>
-                </button>
-                <button class="small-btn btn-outline" onclick="copyText('${escapeHtml(p.username||'').replace(/'/g,"\\'")}','Логин')" title="Копировать логин">
-                    <i class="fas fa-user"></i>
-                </button>
-                <button class="small-btn btn-outline" onclick="copyText('${escapeHtml(p.password).replace(/'/g,"\\'")}','Пароль')" title="Копировать пароль">
-                    <i class="fas fa-copy"></i>
-                </button>
-                <button class="small-btn btn-outline" onclick="openCheckModal(${p.id})" title="Проверить вход">
-                    <i class="fas fa-search"></i>
-                </button>
-                <button class="small-btn btn-warning" onclick="showEditModal(${p.id})" title="Редактировать">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="small-btn btn-danger" onclick="deletePassword(${p.id})" title="Удалить">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-// ============= ЭКСПОРТ / ИМПОРТ =============
 function exportData() {
-    const rows = passwords.map(p => `"${(p.service||'').replace(/"/g,'""')}","${(p.username||'').replace(/"/g,'""')}","${(p.password||'').replace(/"/g,'""')}","${(p.notes||'').replace(/"/g,'""')}"`);
-    const csv  = ['Сервис,Логин,Пароль,Заметки', ...rows].join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = 'passwords.csv';
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    const data = passwords.map(p => ({ 'Сервис': p.service, 'Логин': p.username, 'Пароль': p.password, 'Заметки': p.notes }));
+    const csv = ['Сервис,Логин,Пароль,Заметки', ...data.map(d => `"${(d['Сервис'] || '').replace(/"/g, '""')}","${(d['Логин'] || '').replace(/"/g, '""')}","${(d['Пароль'] || '').replace(/"/g, '""')}","${(d['Заметки'] || '').replace(/"/g, '""')}"`)].join('\n');
+    const blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', 'passwords.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('📁 Экспорт завершён', 'success');
 }
 
-function closeModal(id) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-}
+function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
 function toggleImportMenu() {
     const menu = document.getElementById('importMenu');
     if (menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
 }
 
-document.addEventListener('click', e => {
+document.addEventListener('click', function(e) {
     const menu = document.getElementById('importMenu');
-    if (menu && !e.target.closest('.import-btn-wrapper')) menu.style.display = 'none';
+    const btn = e.target.closest('.import-btn-wrapper');
+    if (menu && !btn && !menu.contains(e.target)) menu.style.display = 'none';
 });
 
 function importFromSource(source) {
     const menu = document.getElementById('importMenu');
     if (menu) menu.style.display = 'none';
-    const guides = {
-        google: 'Google Chrome:\n1. ⋮ → Настройки → Автозаполнение → Пароли\n2. ⋮ → Экспорт паролей → Сохранить CSV',
-        yandex: 'Яндекс.Браузер:\n1. ☰ → Настройки → Пароли\n2. Экспорт паролей → Сохранить CSV',
-        icloud: 'iCloud (Mac): Системные настройки → Пароли → ⋯ → Экспорт\niPhone: Настройки → Пароли → ⋯ → Экспортировать'
-    };
-    if (guides[source]) { alert(guides[source] + '\n\nПосле нажмите OK и выберите файл'); }
-    if (source === 'excel' || guides[source]) importFromExcel();
-    if (source === 'text')  importFromText();
-}
-
-function importFromExcel() {
-    const input  = document.createElement('input');
-    input.type   = 'file';
-    input.accept = '.xlsx,.xls,.csv';
-    input.onchange = e => {
-        const file = e.target.files[0];
-        if (file.name.toLowerCase().endsWith('.csv')) {
-            const r = new FileReader();
-            r.onload = ev => processCSVContent(ev.target.result);
-            r.readAsText(file, 'UTF-8');
-        } else {
-            if (typeof XLSX === 'undefined') { alert('Библиотека Excel не загружена. Сохраните как CSV.'); return; }
-            const r = new FileReader();
-            r.onload = ev => {
-                try {
-                    const wb   = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
-                    const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                    importRecords(json.map(row => ({
-                        service:  String(row['Название'] || row['Сервис'] || row['service'] || row['name'] || row['url'] || '').trim(),
-                        username: String(row['Логин']    || row['username'] || row['login'] || row['email'] || '').trim(),
-                        password: String(row['Пароль']   || row['password'] || row['pass']  || '').trim(),
-                        notes:    String(row['Заметки']  || row['notes']    || '').trim()
-                    })));
-                } catch(e) { alert('Ошибка: ' + e.message); }
-            };
-            r.readAsArrayBuffer(file);
-        }
-    };
-    input.click();
-}
-
-function processCSVContent(content) {
-    const lines   = content.replace(/^\uFEFF/, '').split(/\r?\n/);
-    if (lines.length < 2) { alert('Файл пуст'); return; }
-    const delim   = lines[0].includes(',') && !lines[0].includes(';') ? ',' : ';';
-    const headers = lines[0].split(delim).map(h => h.replace(/^"|"$/g,'').trim().toLowerCase());
-    let sI=-1, uI=-1, pI=-1, nI=-1;
-    headers.forEach((h,i) => {
-        if (/название|сервис|service|name|url/.test(h)) sI=i;
-        if (/логин|login|user|username|email/.test(h))  uI=i;
-        if (/пароль|password|pass|pwd/.test(h))         pI=i;
-        if (/заметки|notes/.test(h))                    nI=i;
-    });
-    if (sI<0||pI<0) { alert('Не найдены столбцы Сервис/Пароль.\nСтолбцы: ' + headers.join(', ')); return; }
-
-    const records = [];
-    for (let i = 1; i < lines.length; i++) {
-        const vals = [];
-        let cur = '', inQ = false;
-        for (const ch of lines[i]) {
-            if (ch === '"') { inQ = !inQ; }
-            else if (ch === delim && !inQ) { vals.push(cur.trim()); cur=''; }
-            else cur += ch;
-        }
-        vals.push(cur.trim());
-        const v = vals.map(x => x.replace(/^"|"$/g,'').trim());
-        if (v[sI] && v[pI]) records.push({ service: v[sI], username: v[uI]||'', password: v[pI], notes: v[nI]||'' });
-    }
-    importRecords(records);
-}
-
-function importFromText() {
-    const input  = document.createElement('input');
-    input.type   = 'file'; input.accept = '.txt';
-    input.onchange = e => {
-        const r = new FileReader();
-        r.onload = ev => {
-            const records = ev.target.result.split(/\r?\n/)
-                .filter(l => l.trim() && /[:=]/.test(l))
-                .map(l => {
-                    const [s, ...rest] = l.split(/[:=]/);
-                    const full = rest.join(':').trim();
-                    const m    = full.match(/^(\S+@\S+\.\S+)\s+(.+)$/);
-                    return {
-                        service:  s.trim(),
-                        username: m ? m[1] : '',
-                        password: m ? m[2] : full
-                    };
-                });
-            importRecords(records);
-        };
-        r.readAsText(e.target.files[0], 'UTF-8');
-    };
-    input.click();
-}
-
-async function importRecords(newRecords) {
-    if (!newRecords.length) { alert('Нет записей для импорта'); return; }
-    let imported = 0, dupes = 0;
-    for (const r of newRecords) {
-        if (!r.service || !r.password) continue;
-        if (passwords.some(p =>
-            p.service.toLowerCase() === r.service.toLowerCase() &&
-            (p.username||'').toLowerCase() === (r.username||'').toLowerCase()
-        )) { dupes++; continue; }
-        const newId = passwords.length ? Math.max(...passwords.map(p => p.id), 0) + 1 : 1;
-        passwords.push({ id: newId, service: r.service, username: r.username||'', password: r.password,
-            notes: r.notes||'', lastUpdated: new Date().toLocaleString(), showPassword: false, needsCheck: false });
-        imported++;
-    }
-    if (imported > 0) { await saveUserData(); renderPasswords(); }
-    alert(`✅ Импортировано: ${imported}\n⏭️ Пропущено (дубликаты): ${dupes}`);
+    if (source === 'google') showToast(t('msg_import_google_help'), 'info');
+    else if (source === 'yandex') showToast(t('msg_import_yandex_help'), 'info');
+    else if (source === 'icloud') showToast(t('msg_import_icloud_help'), 'info');
+    else showToast('Импорт будет доступен в следующей версии', 'info');
 }
 
 // ============= ПРОВЕРКА ПАРОЛЕЙ =============
 let currentCheckId = null;
 
 function guessWebsiteUrl(service) {
-    const s = service.toLowerCase().trim();
-    if (customUrls[s]) return customUrls[s];
-    const known = {
-        google: 'https://accounts.google.com', gmail: 'https://mail.google.com',
-        yandex: 'https://passport.yandex.ru',  'mail.ru': 'https://mail.ru',
-        vk: 'https://vk.com',                  facebook: 'https://facebook.com',
-        instagram: 'https://instagram.com',     github: 'https://github.com/login',
-        steam: 'https://store.steampowered.com/login',
-        discord: 'https://discord.com/login',   twitch: 'https://www.twitch.tv/login'
+    const serviceLower = service.toLowerCase().trim();
+    if (customUrls[serviceLower]) return customUrls[serviceLower];
+    const domains = {
+        'google': 'https://accounts.google.com',
+        'gmail': 'https://mail.google.com',
+        'yandex': 'https://passport.yandex.ru',
+        'mail.ru': 'https://mail.ru',
+        'vk': 'https://vk.com',
+        'facebook': 'https://facebook.com',
+        'instagram': 'https://instagram.com',
+        'github': 'https://github.com/login',
+        'steam': 'https://store.steampowered.com/login',
+        'epicgames': 'https://www.epicgames.com/id/login',
+        'discord': 'https://discord.com/login',
+        'twitch': 'https://www.twitch.tv/login',
+        'aol': 'https://login.aol.com'
     };
-    for (const [k,v] of Object.entries(known)) { if (s.includes(k)) return v; }
-    const m = s.match(/([a-z0-9-]+\.[a-z]{2,})/);
-    if (m) return `https://${m[1]}`;
-    return `https://${s.replace(/[^a-z0-9]/g,'')}.com`;
+    for (const [key, url] of Object.entries(domains)) {
+        if (serviceLower === key || serviceLower.includes(key)) return url;
+    }
+    const match = serviceLower.match(/([a-z0-9-]+\.[a-z]{2,})/);
+    if (match) return `https://${match[1]}`;
+    const clean = serviceLower.replace(/[^a-z0-9]/g, '');
+    return clean ? `https://${clean}.com` : '';
 }
 
 function openCheckModal(id) {
@@ -815,59 +777,71 @@ function openCheckModal(id) {
     if (!p) return;
     currentCheckId = id;
     document.getElementById('checkServiceName').innerHTML = `<strong><i class="fas fa-globe"></i> ${escapeHtml(p.service)}</strong>`;
-    document.getElementById('checkUrl').value      = customUrls[p.service.toLowerCase().trim()] || guessWebsiteUrl(p.service);
-    document.getElementById('checkLogin').value    = p.username || '';
+    let url = customUrls[p.service.toLowerCase().trim()];
+    if (!url) url = guessWebsiteUrl(p.service);
+    document.getElementById('checkUrl').value = url;
+    document.getElementById('checkLogin').value = p.username || '';
     document.getElementById('checkPassword').value = p.password;
     document.getElementById('checkResult').style.display = 'none';
-    document.getElementById('checkModal').style.display  = 'flex';
+    document.getElementById('checkResult').innerHTML = '';
+    document.getElementById('checkModal').style.display = 'flex';
 }
 
 function saveCurrentUrl() {
     if (!currentCheckId) return;
-    const p   = passwords.find(p => p.id === currentCheckId);
+    const p = passwords.find(p => p.id === currentCheckId);
+    if (!p) return;
     const url = document.getElementById('checkUrl').value;
-    if (!url) { alert('Введите URL'); return; }
+    if (!url) { showToast(t('msg_enter_url_to_save'), 'error'); return; }
     saveCustomUrl(p.service, url);
-    showCheckResult('URL сохранён!', '#d4edda', '#155724');
+    const resultDiv = document.getElementById('checkResult');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + t('msg_url_saved');
+    resultDiv.style.background = '#d4edda';
+    resultDiv.style.color = '#155724';
+    setTimeout(() => resultDiv.style.display = 'none', 2000);
 }
 
 async function copyLoginOnly() {
-    const v = document.getElementById('checkLogin').value;
-    if (!v) { alert('❌ Логин пуст'); return; }
-    try { await navigator.clipboard.writeText(v); showCheckResult('✅ Логин скопирован!', '#d4edda', '#155724'); }
-    catch(e) { alert('Не удалось скопировать'); }
+    const login = document.getElementById('checkLogin').value;
+    if (!login) { showToast(t('msg_login_empty'), 'error'); return; }
+    await navigator.clipboard.writeText(login);
+    showToast(t('msg_copy_login_success'), 'success');
 }
 
 async function copyPasswordOnly() {
-    const v = document.getElementById('checkPassword').value;
-    if (!v) { alert('❌ Пароль пуст'); return; }
-    try { await navigator.clipboard.writeText(v); showCheckResult('✅ Пароль скопирован!', '#d4edda', '#155724'); }
-    catch(e) { alert('Не удалось скопировать'); }
+    const password = document.getElementById('checkPassword').value;
+    if (!password) { showToast(t('msg_password_empty'), 'error'); return; }
+    await navigator.clipboard.writeText(password);
+    showToast(t('msg_copy_password_success'), 'success');
 }
 
 async function copyLoginAndPassword() {
-    const l = document.getElementById('checkLogin').value;
-    const p = document.getElementById('checkPassword').value;
-    const t = `Логин: ${l||'не указан'}\nПароль: ${p||'не указан'}`;
-    try { await navigator.clipboard.writeText(t); showCheckResult('✅ Логин и пароль скопированы!', '#d4edda', '#155724'); }
-    catch(e) { alert('Не удалось скопировать'); }
+    const login = document.getElementById('checkLogin').value;
+    const password = document.getElementById('checkPassword').value;
+    const text = `${t('msg_copy_login_title')}: ${login || t('msg_no_login')}\n${t('msg_copy_password_title')}: ${password || '---'}`;
+    await navigator.clipboard.writeText(text);
+    showToast(t('msg_copy_all_success'), 'success');
 }
 
 function testLogin() {
     const url = document.getElementById('checkUrl').value;
-    if (!url) { alert('Введите URL сайта'); return; }
-    const l = document.getElementById('checkLogin').value;
-    const p = document.getElementById('checkPassword').value;
-    navigator.clipboard.writeText(`${l}\n${p}`).catch(() => {});
-    const win = window.open(url, '_blank');
-    if (!win) { showCheckResult('⚠️ Браузер заблокировал всплывающее окно. Разрешите его.', '#f8d7da', '#721c24'); return; }
-    setTimeout(() => showCheckResult(
-        `<i class="fas fa-check-circle"></i> Сайт открыт.<br>
-         <strong>📋 Данные скопированы:</strong><br>
-         Логин: ${escapeHtml(l||'не указан')}<br>Пароль: ${escapeHtml(p||'не указан')}<br>
-         <small>Нажмите Ctrl+V на странице входа</small>`,
-        '#d4edda', '#155724'
-    ), 800);
+    const login = document.getElementById('checkLogin').value;
+    const password = document.getElementById('checkPassword').value;
+    const resultDiv = document.getElementById('checkResult');
+    if (!url) { showToast(t('msg_enter_url'), 'error'); return; }
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('msg_site_opened') + '<br>' + t('msg_data_copied');
+    navigator.clipboard.writeText(`${login}\n${password}`);
+    const newWindow = window.open(url, '_blank');
+    if (!newWindow) {
+        resultDiv.innerHTML = t('msg_popup_blocked');
+        return;
+    }
+    setTimeout(() => {
+        resultDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${t('msg_site_opened')}<br><br>📋 ${t('msg_data_copied')}<br><br>💡 ${t('msg_instruction')}`;
+        resultDiv.style.background = '#d4edda';
+    }, 1000);
 }
 
 function markAsFailed() {
@@ -875,18 +849,59 @@ function markAsFailed() {
     const idx = passwords.findIndex(p => p.id === currentCheckId);
     if (idx !== -1) {
         passwords[idx].needsCheck = true;
-        saveUserData(); renderPasswords();
-        showCheckResult('<i class="fas fa-exclamation-triangle"></i> Отмечен как нерабочий.', '#f8d7da', '#721c24');
+        saveUserData();
+        renderPasswords();
+        const resultDiv = document.getElementById('checkResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + t('msg_mark_failed');
         setTimeout(() => closeModal('checkModal'), 2000);
+        showToast(t('msg_mark_failed'), 'warning');
     }
 }
 
-function showCheckResult(html, bg, color) {
-    const el = document.getElementById('checkResult');
-    el.style.display    = 'block';
-    el.style.background = bg;
-    el.style.color      = color;
-    el.style.padding    = '10px';
-    el.style.borderRadius = '8px';
-    el.innerHTML        = html;
-}
+auth.onAuthStateChanged(async (user) => {
+    if (user && !currentUser) {
+        let attempts = 0;
+        const maxAttempts = 3;
+        let success = false;
+        while (attempts < maxAttempts && !success) {
+            const pwd = prompt(t('msg_enter_master_password', maxAttempts - attempts));
+            if (!pwd) { await auth.signOut(); return; }
+            const testKey = deriveKey(pwd, user.uid);
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists && doc.data().encryptedData) {
+                const decrypted = decryptData(doc.data().encryptedData, testKey);
+                if (decrypted !== null) {
+                    success = true;
+                    currentUser = user;
+                    masterKey = testKey;
+                    passwords = decrypted;
+                    passwords.forEach(p => { if (p.showPassword === undefined) p.showPassword = false; if (p.needsCheck === undefined) p.needsCheck = false; });
+                    renderPasswords();
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                    document.getElementById('userEmail').textContent = currentUser.email;
+                    showToast(t('msg_login_success'), 'success');
+                    return;
+                } else {
+                    attempts++;
+                    if (attempts < maxAttempts) showToast(t('msg_wrong_master_password', maxAttempts - attempts), 'error');
+                }
+            } else {
+                success = true;
+                currentUser = user;
+                masterKey = testKey;
+                passwords = [];
+                renderPasswords();
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('userEmail').textContent = currentUser.email;
+                return;
+            }
+        }
+        if (!success) { showToast(t('msg_max_attempts'), 'error'); await auth.signOut(); }
+    }
+});
+
+initLanguageSelector();
+updateUILanguage();
